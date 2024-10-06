@@ -70,7 +70,7 @@ while (true)
             // Save the decoded image
             using (Image<Rgba32> imageSharp = Image.LoadPixelData<Rgba32>(decodedImage.Rgba, decodedImage.Width, decodedImage.Height))
             {
-                imageSharp.Save(Path.Combine(Directory.GetCurrentDirectory(), "thumbhash-"+relativePath));
+                imageSharp.Save(Path.Combine(Directory.GetCurrentDirectory(), "thumbhash-"+relativePath.Split('.')[0]+".png")); 
             }
 
         }

@@ -17,7 +17,7 @@
 ### 示例 2
 <div align = "center">    
 <img  src="ThumbHash.Demo/2.jpg" width="49%" />
-<img  src="ThumbHash.Demo/thumbhash-2.jpg" width="49%" height="180px" />
+<img  src="ThumbHash.Demo/thumbhash-2.png" width="49%" height="180px" />
 <br>
   jpg图片
 </div>
@@ -25,7 +25,7 @@
 ### 示例 3
 <div align = "center">    
 <img  src="ThumbHash.Demo/3.webp" width="49%" />
-<img  src="ThumbHash.Demo/thumbhash-3.webp" width="49%" height="256.77px" />
+<img  src="ThumbHash.Demo/thumbhash-3.png" width="49%" height="256.77px" />
 <br>
   webp图片(因为webp图片的解码问题预览图保存为webp放大效果有问题，保存为其他格式会好一些）
 </div>

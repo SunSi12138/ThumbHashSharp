@@ -9,12 +9,20 @@ namespace ThumbHash
         /// <summary>
         /// Encodes an RGBA image to a ThumbHash. RGB should not be premultiplied by A.
         /// </summary>
-        /// <summary>
-        /// Encodes an RGBA image to a ThumbHash. RGB should not be premultiplied by A.
-        /// </summary>
+        /// <param name="width">The width of the image.</param>
+        /// <param name="height">The height of the image.</param>
+        /// <param name="rgba">The RGBA pixel data of the image.</param>
+        /// <returns>A base64 string representing the ThumbHash.</returns>
         public static string RgbaToThumbHashBase64(int width, int height, ReadOnlySpan<byte> rgba)
             => Convert.ToBase64String(RgbaToThumbHash(width, height, rgba));
 
+        /// <summary>
+        /// Encodes an RGBA image to a ThumbHash. RGB should not be premultiplied by A.
+        /// </summary>
+        /// <param name="width">The width of the image.</param>
+        /// <param name="height">The height of the image.</param>
+        /// <param name="rgba">The RGBA pixel data of the image.</param>
+        /// <returns>A byte array representing the ThumbHash.</returns>
         public static byte[] RgbaToThumbHash(int width, int height, ReadOnlySpan<byte> rgba)
         {
             int pixelCount = width * height;

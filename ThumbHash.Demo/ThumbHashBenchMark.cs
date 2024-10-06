@@ -1,13 +1,12 @@
 using System.IO;
 using BenchmarkDotNet.Attributes;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
+using ImageMagick;
 using ThumbHash;
 
 public class ThumbHashBenchMark
 {
     public static string path = "";
-    readonly Image<Rgba32> imageSharp = Image.Load<Rgba32>(Path.Combine(Directory.GetCurrentDirectory(), path));
+    readonly MagickImage image = new(path);
     int width;
     int height;
     byte[] rgba;
@@ -15,10 +14,10 @@ public class ThumbHashBenchMark
     [GlobalSetup]
     public void Setup()
     {
-        imageSharp.CopyPixelDataTo(rgba);
+        rgba = image.GetPixels().ToByteArray(PixelMapping.RGBA);
         thumbHash = ThumbHashHelper.RgbaToThumbHashBase64(width, height, rgba);
-        width = imageSharp.Width;
-        height = imageSharp.Height;
+        width = (int)image.Width;
+        height = (int)image.Height;
         rgba = new byte[width * height * 4];
     }
     [Benchmark]

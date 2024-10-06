@@ -1,61 +1,60 @@
 ﻿using System;
 using System.IO;
 using BenchmarkDotNet.Running;
-using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
+using ImageMagick;
 using ThumbHash;
 
 //1.png
 //2.jpg
 //3.webp
 var relativePath = ""; 
-
 while (true)
 {
     Console.WriteLine("请选择图片格式：");
     Console.WriteLine("1. PNG");
     Console.WriteLine("2. JPEG");
     Console.WriteLine("3. WEBP");
+    Console.WriteLine("4. AVIF");
     Console.WriteLine("按 Ctrl+C 退出");
 
-    var formatInput = Console.ReadKey();
-
-    switch (formatInput.KeyChar)
+    var formatKey = Console.ReadKey(intercept: true).KeyChar;
+    relativePath = formatKey switch
     {
-        //switch key pressed    
-        case '1':
-            relativePath = "1.png";
-            break;
-        case '2':
-            relativePath = "2.jpg";
-            break;
-        case '3':
-            relativePath = "3.webp";
-            break;
-        default:
-        {
-            Console.WriteLine("退出");
-            return;
-        }
+        '1' => "1.png",
+        '2' => "2.jpg",
+        '3' => "3.webp",
+        '4' => "4.avif",
+        _ => null
+    };
+
+    if (relativePath == null)
+    {
+        Console.WriteLine("\n无效的选择，请重试。");
+        continue;
     }
 
     var path = Path.Combine(Directory.GetCurrentDirectory(), relativePath);
+    ThumbHashBenchMark.path = path;
+    if (!File.Exists(path))
+    {
+        Console.WriteLine($"\n文件未找到: {path}");
+        continue;
+    }
+
     while (true)
     {
-        Console.WriteLine("请选择操作：");
+        Console.WriteLine("\n请选择操作：");
         Console.WriteLine("1. 运行 Benchmark");
         Console.WriteLine("2. 运行普通测试");
-        Console.WriteLine("其他返回上一级");
         Console.WriteLine("按 Ctrl+C 退出");
 
-        var input = Console.ReadKey();
+        var inputKey = Console.ReadKey(intercept: true).KeyChar;
 
-        if (input.KeyChar == '1')
+        if (inputKey == '1')
         {
-            ThumbHashBenchMark.path = relativePath;
             var summary = BenchmarkRunner.Run<ThumbHashBenchMark>();
         }
-        else if (input.KeyChar == '2')
+        else if (inputKey == '2')
         {
             var sw = System.Diagnostics.Stopwatch.StartNew();
             var thumbHash = TestEncode(path);
@@ -68,11 +67,10 @@ while (true)
             Console.WriteLine($"解码测试完成，耗时: {sw.ElapsedMilliseconds}ms");
             Console.WriteLine($"Decoded Image - Width: {decodedImage.Width}, Height: {decodedImage.Height}");
             // Save the decoded image
-            using (Image<Rgba32> imageSharp = Image.LoadPixelData<Rgba32>(decodedImage.Rgba, decodedImage.Width, decodedImage.Height))
+            using (var imageSharp = new MagickImage(decodedImage.Rgba, new PixelReadSettings((uint)decodedImage.Width, (uint)decodedImage.Height, StorageType.Char, PixelMapping.RGBA)))
             {
-                imageSharp.Save(Path.Combine(Directory.GetCurrentDirectory(), "thumbhash-"+relativePath.Split('.')[0]+".png")); 
+                imageSharp.Write(Path.Combine(Directory.GetCurrentDirectory(), "thumbhash-" + relativePath.Split('.')[0] + ".png"));
             }
-
         }
         else
         {
@@ -82,20 +80,18 @@ while (true)
 }
 string TestEncode(string path)
 {
-    using Image<Rgba32> imageSharp = Image.Load<Rgba32>(path);
-    int width = imageSharp.Width;
-    int height = imageSharp.Height;
-    // 提取 RGBA 数据
-    byte[] rgba = new byte[width * height * 4];
-    imageSharp.CopyPixelDataTo(rgba);
+    using var image = new MagickImage(path);
+    int width = (int)image.Width;
+    int height = (int)image.Height;
+    byte[] rgba = image.GetPixels().ToByteArray(PixelMapping.RGBA);
 
-    // 计算ThumbHash
+    // 计算 ThumbHash
     return ThumbHashHelper.RgbaToThumbHashBase64(width, height, rgba);
     
 }
 
 ThumbHashHelper.Image TestDecode(string thumbHash)
 {
-    // Decode back to RGBA
+    // 解码回 RGBA
     return ThumbHashHelper.ThumbHashToRgba(thumbHash);
 }

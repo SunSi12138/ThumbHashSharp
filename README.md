@@ -61,3 +61,13 @@ float aspectRatio = ThumbHashHelper.ThumbHashToApproximateAspectRatio(thumbHashB
 <br>
   webp图片(因为webp图片的解码问题预览图保存为webp放大效果有问题，保存为其他格式会好一些）
 </div>
+
+
+### 示例 4
+<div align = "center">    
+<img  src="ThumbHash.Demo/4.avif" width="49%" />
+<img  src="ThumbHash.Demo/thumbhash-4.png" width="49%" height="256.77px" />
+<br>
+  avif图片
+</div>
+

@@ -3,6 +3,10 @@
 这是一个 ThumbHash 的 C# 实现。ThumbHash 是一种生成图像缩略图（通常使用base64存储）的算法，具体原理见：[ThumbHash 原理](https://evanw.github.io/thumbhash/#:~:text=ThumbHash%20generates%20an%20image)。
 这个算法很适合用来制作图片加载的占位符
 
+## 这个库的特别之处
+!支持100*100以上大小的图片
+!默认使用base64或者byte[]输出转码
+
 ## 安装
 
 你可以通过 NuGet 安装 ThumbHashSharp：

@@ -13,10 +13,4 @@
     <ProjectReference Include="..\ThumbHash\ThumbHash.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="1.png;2.jpg;3.webp;4.avif">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>

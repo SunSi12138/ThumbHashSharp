@@ -9,14 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Magick.NET-Q8-AnyCPU" Version="14.15.0" />
     <ProjectReference Include="..\ThumbHash\ThumbHash.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="1.png;2.jpg;3.webp;4.avif">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.8" />
   </ItemGroup>
 
 </Project>

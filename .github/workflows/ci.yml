@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test-pack:
+    runs-on: ubuntu-latest
+    env:
+      CI: true
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          global-json-file: global.json
+
+      - name: Restore
+        run: dotnet restore ThumbHash.sln
+
+      - name: Build
+        run: dotnet build ThumbHash.sln --configuration Release --no-restore
+
+      - name: Test, including README example
+        run: dotnet test ThumbHash.Tests/ThumbHashSharp.Tests.csproj --configuration Release --no-build
+
+      - name: Pack
+        run: dotnet pack ThumbHash/ThumbHash.csproj --configuration Release --no-build --output artifacts/packages
+
+      - name: Publish NativeAOT library
+        run: dotnet publish ThumbHash.Native/ThumbHashSharp.Native.csproj --configuration Release --runtime linux-x64 --output artifacts/native/linux-x64
+
+      - name: Compile and run native C smoke test
+        run: |
+          cc -std=c11 -Wall -Wextra -Werror \
+            ThumbHash.Native.Tests/smoke.c \
+            -I ThumbHash.Native/include \
+            -L artifacts/native/linux-x64 \
+            -l:thumbhashsharp_native.so \
+            -Wl,-rpath,'$ORIGIN' \
+            -o artifacts/native/linux-x64/thumbhashsharp-smoke
+          artifacts/native/linux-x64/thumbhashsharp-smoke
+
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: ThumbHashSharp-package
+          path: artifacts/packages/*.nupkg
+          if-no-files-found: error
+
+      - name: Upload Linux native library
+        uses: actions/upload-artifact@v4
+        with:
+          name: ThumbHashSharp-native-linux-x64
+          path: |
+            artifacts/native/linux-x64/thumbhashsharp_native.so
+            artifacts/native/linux-x64/include/thumbhashsharp.h
+          if-no-files-found: error

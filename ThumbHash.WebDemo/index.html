@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ThumbHashSharp 图片渐进加载演示">
+  <title>ThumbHashSharp · 图片渐进加载演示</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="hero">
+    <nav class="nav" aria-label="演示导航">
+      <a class="brand" href="#top" aria-label="回到页面顶部">
+        <span class="brand-mark">TH</span>
+        <span>ThumbHashSharp</span>
+      </a>
+      <a class="source-link" href="https://github.com/SunSi12138/ThumbHashSharp">GitHub ↗</a>
+    </nav>
+
+    <div class="hero-copy" id="top">
+      <p class="eyebrow">Loading experience, compressed.</p>
+      <h1>让等待，先有一幅画。</h1>
+      <p class="intro">每张原图加载前，先用十几到二十几个字节的 ThumbHash 描绘颜色与轮廓。原图就绪后，再自然过渡到清晰画面。</p>
+    </div>
+
+    <div class="hero-note">
+      <span>提示</span>
+      按住任意图片，可随时对比它的 ThumbHash 占位图。
+    </div>
+  </header>
+
+  <div class="control-panel" aria-label="加载演示控制">
+    <label class="delay-control" for="delay">
+      <span>模拟加载延迟</span>
+      <span class="delay-value" id="delay-value">900 ms</span>
+      <input id="delay" type="range" min="0" max="2400" value="900" step="100">
+    </label>
+    <button class="replay-button" id="replay" type="button">
+      <span aria-hidden="true">↻</span>
+      重播加载
+    </button>
+  </div>
+
+  <main>
+    <section class="gallery-section" aria-labelledby="gallery-title">
+      <div class="section-heading">
+        <div>
+          <p class="section-index">01 / 渐进画廊</p>
+          <h2 id="gallery-title">从轮廓，到细节</h2>
+        </div>
+        <p>横图、竖图、透明 PNG、WebP 与 AVIF 使用同一套加载体验；点击图片名称可查看原始来源。</p>
+      </div>
+      <div class="gallery" id="gallery"></div>
+      <noscript>此演示需要 JavaScript 来重放图片加载过渡。</noscript>
+    </section>
+  </main>
+
+  <footer>
+    <span>ThumbHashSharp v2 loading demo</span>
+    <span>Built with Area resize · No runtime image dependency</span>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="demo-data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
